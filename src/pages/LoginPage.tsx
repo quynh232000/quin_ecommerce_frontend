@@ -5,9 +5,9 @@ import { FaRegEyeSlash } from "react-icons/fa";
 import { ChangeEvent, useState } from "react";
 import { FormLogin } from "../interfaces/formData";
 import { IoEyeOutline } from "react-icons/io5";
-import {  SLogin } from "../services/AppService";
+import { SLogin } from "../services/AppService";
 import { GoogleCredentialResponse } from "../interfaces/app";
-import {  useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/reducers";
 // import { asyncCart } from "../redux/reducers/appReducer";
 import GoogleLoginButton from "../components/compoment/GoogleLoginButton";
@@ -15,11 +15,12 @@ import { sLoginWithGoogle } from "../services/AppService";
 import { useTranslation } from "react-i18next";
 import { setIsLogin } from "../redux/reducers/authReducer";
 import { setCurrentUser } from "../redux/reducers/appReducer";
+import i_logo from "../assets/logo/logo-new.png";
 // import ToastMessage from "../components/compoment/ToastMessage";
 
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-function Login() {
-  const {t} = useTranslation()
+function LoginPage() {
+  const { t } = useTranslation();
   const location = useLocation();
   const { cart } = useSelector((state: RootState) => state.appReducer);
   const dispatch = useDispatch();
@@ -42,7 +43,7 @@ function Login() {
     if (value == "") {
       setErrorInput({
         ...errorInput,
-        [name]: t('login.t1'),
+        [name]: t("login.t1"),
       });
       isValid = false;
     } else {
@@ -55,7 +56,7 @@ function Login() {
       if (!emailRegex.test(value)) {
         setErrorInput({
           ...errorInput,
-          email: t('login.t2'),
+          email: t("login.t2"),
         });
         isValid = false;
       }
@@ -80,20 +81,18 @@ function Login() {
     setResultError("");
     setResultSuccess("");
     SLogin(formData).then((res) => {
-     
       handleLoginSuccess(res);
     });
   };
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleLoginSuccess = (res: any) => {
     if (res.status) {
-      
       localStorage.setItem("USER_TOKEN", res.data.meta.access_token);
       localStorage.setItem("IS_LOGIN", JSON.stringify(true));
       localStorage.setItem("CURRENT_USER", JSON.stringify(res.data.user));
-      dispatch(setIsLogin(true))
-      dispatch(setCurrentUser(res.data.user))
+      dispatch(setIsLogin(true));
+      dispatch(setCurrentUser(res.data.user));
 
       // asyn cart
       if (cart) {
@@ -106,7 +105,7 @@ function Login() {
         //   setResultSuccess(t('login.3'));
         //   // window.location.href = redirect ? redirect : "/";
         // });
-        navigate('/')
+        navigate("/");
       } else {
         // window.location.href = redirect ? redirect : "/";
       }
@@ -128,14 +127,26 @@ function Login() {
     <div className="w-full px-5 xl:px-0 xl:w-content m-auto my-[32px]">
       {/* <ToastMessage type="success" title="Thành công!" message="okoko" /> */}
       <div className="border rounded-lg flex gap-5 shadow-sm px-5 py-12">
-        <div className="w-full lg:w-35 p-3">
+        <div className="flex-1 px-12 rounded-lg hidden lg:block">
+          <img
+            src={i_login}
+            className="w-full rounded-lg h-full object-cover"
+            alt=""
+          />
+        </div>
+        <div className="w-full lg:w-40 p-3">
           <div>
-            <div className="font-bold text-3xl">{t('login.t4')}</div>
-            <div className="text-sm text-gray-500 mt-1">
-            {t('login.t5')}
+            <div className="flex justify-between items-center">
+              <div className="font-bold text-2xl text-primary-500">
+                {t("login.t4")}
+              </div>
+              <Link to={"/"}>
+                <img src={i_logo} className="w-[74px]" alt="" />
+              </Link>
             </div>
+            <div className="text-sm text-gray-500 mt-1">Đăng nhập tài khoản mua sắm nhiều ưu đãi</div>
           </div>
-          <div className="py-4 flex flex-col gap-3">
+          <div className="py-4 flex flex-col gap-3 mt-2">
             <div className="flex flex-col gap-1">
               <label htmlFor="" className="text-sm font-bold">
                 Email
@@ -155,7 +166,7 @@ function Login() {
             </div>
             <div className="flex flex-col gap-1 ">
               <label htmlFor="" className="text-sm font-bold">
-              {t('login.t6')}
+                {t("login.t6")}
               </label>
               <div className="w-full relative">
                 <input
@@ -188,7 +199,7 @@ function Login() {
               <small className={"text-red-500"}>{errorInput.password}</small>
             </div>
             <div className="flex text-sm hover:text-primary-500">
-              <Link to={"/forgot-password"}>{t('login.t7')}</Link>
+              <Link to={"/forgot-password"}>{t("login.t7")}</Link>
             </div>
             <div>
               {resultSuccess && (
@@ -209,11 +220,11 @@ function Login() {
                 onClick={handleSubmit}
                 className="w-full bg-primary-500 text-white py-2 rounded-lg hover:bg-primary-600"
               >
-                {t('login.t4')}
+                {t("login.t4")}
               </button>
             ) : (
               <button className="w-full bg-primary-200 text-white py-2 rounded-lg cursor-not-allowed">
-                {t('login.t4')}
+                {t("login.t4")}
               </button>
             )}
 
@@ -221,9 +232,9 @@ function Login() {
               <Link
                 to={"/register" + (redirect ? "?redirect=" + redirect : "")}
               >
-                {t('login.t8')}?{" "}
+                {t("login.t8")}?{" "}
                 <span className="text-primary-500 underline ml-1 hover:text-primary-600">
-                {t('login.t9')}
+                  {t("login.t9")}
                 </span>
                 .
               </Link>
@@ -232,10 +243,10 @@ function Login() {
 
           <div className="border-b relative my-4">
             <div className=" absolute text-sm top-[-10px] bg-white px-3 right-[50%] translate-x-[50%] text-gray-500">
-            {t('login.t10')}
+              {t("login.t10")}
             </div>
           </div>
-          <div className="pt-4">
+          <div className="pt-4 flex justify-center">
             <GoogleLoginButton handleLoginWithGoogle={handleLoginWithGoogle} />
             {/* <button className="border shadow-sm rounded-lg w-full py-2 flex items-center justify-center gap-3 hover:bg-primary-50">
               <img src={i_google} alt="" />
@@ -243,12 +254,9 @@ function Login() {
             </button> */}
           </div>
         </div>
-        <div className="flex-1 px-12 hidden lg:block">
-          <img src={i_login} alt="" />
-        </div>
       </div>
     </div>
   );
 }
 
-export default Login;
+export default LoginPage;

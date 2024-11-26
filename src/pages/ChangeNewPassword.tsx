@@ -1,8 +1,8 @@
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import i_login from "../assets/images/login.png";
 import i_google from "../assets/icons/google.png";
 import { useState } from "react";
-import { SChangeNewPassword } from "../services/UserService";
+// import { SChangeNewPassword } from "../services/UserService";
 function ChangeNewPassword() {
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
@@ -12,22 +12,23 @@ function ChangeNewPassword() {
   const [loading,setLoading] = useState(false)
 
   const { token } = useParams();
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
   const handleSubmit = () => {
     if (token && password && passwordConfirm == password) {
       setLoading(true)
-      SChangeNewPassword(password, token).then((res) => {
-        setLoading(false)
-        if (res.status) {
+      setMess({status:false,message:''})
+      // SChangeNewPassword(password, token).then((res) => {
+      //   setLoading(false)
+      //   if (res.status) {
         
-         setMess({ status: true, message: res.message });
-         setTimeout(() => {
-          navigate('/login')
-         }, 2000);
-        } else {
-          setMess({ status: false, message: res.message });
-        }
-      });
+      //    setMess({ status: true, message: res.message });
+      //    setTimeout(() => {
+      //     navigate('/login')
+      //    }, 2000);
+      //   } else {
+      //     setMess({ status: false, message: res.message });
+      //   }
+      // });
     }
   };
   return (

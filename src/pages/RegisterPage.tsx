@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import i_register from "../assets/images/register.png";
 import i_google from "../assets/icons/google.png";
+import i_logo from "../assets/logo/logo-new.png";
 import { ChangeEvent, useState } from "react";
 import { FormRegister } from "../interfaces/formData";
 import {
@@ -30,7 +31,7 @@ const passColors = [
   "bg-orange-500",
   "bg-success-500",
 ];
-function Register() {
+function RegisterPage() {
   const { t } = useTranslation();
   const location = useLocation();
 
@@ -197,20 +198,22 @@ function Register() {
   return (
     <div className="w-full px-5 xl:px-0 xl:w-content m-auto my-[32px] ">
       <div className="border rounded-lg flex gap-5 shadow-sm px-5 py-12">
-        <div className="flex-1 px-12 hidden lg:block">
-          <img src={i_register} alt="" />
-        </div>
-        <div className="lg:w-35 w-full p-3">
+        <div className="lg:w-40 w-full p-3">
           <div>
-            <div className="font-bold text-3xl">{t("register.t9")}</div>
+            <div className="flex items-center justify-between">
+              <div className="font-bold text-2xl text-primary-500">Đăng ký</div>
+              <Link to={"/"} className="w-[74px]">
+                <img src={i_logo} alt="" className="w-full" />
+              </Link>
+            </div>
             <div className="text-sm text-gray-500 mt-1">
-              {t("register.t10")}
+              Đăng ký tài khoản rinh ngay quà khủng
             </div>
           </div>
-          <div className="py-4 flex flex-col gap-3">
+          <div className="py-4 flex flex-col gap-3 mt-2">
             <div className="flex flex-col gap-1">
-              <label htmlFor="" className="text-sm font-bold">
-                {t("register.t11")}
+            <label htmlFor="" className="text-sm font-bold">
+               Họ tên
               </label>
               <input
                 className={
@@ -218,30 +221,14 @@ function Register() {
                   (errorInput.first_name && " border-deep-orange-500")
                 }
                 type="text"
-                name="first_name"
+                name="fullname"
                 value={formData.first_name}
                 onChange={handleChange}
-                placeholder="Nguyen Van"
+                placeholder="Họ tên"
               />
               <small className="text-red-500">{errorInput.first_name}</small>
             </div>
-            <div className="flex flex-col gap-1">
-              <label htmlFor="" className="text-sm font-bold">
-                {t("register.t12")}
-              </label>
-              <input
-                className={
-                  "border p-2 px-4 rounded-lg shadow-sm focus:border-primary-500" +
-                  (errorInput.last_name && " border-deep-orange-500")
-                }
-                type="text"
-                name="last_name"
-                value={formData.last_name}
-                onChange={handleChange}
-                placeholder="An"
-              />
-              <small className="text-red-500">{errorInput.last_name}</small>
-            </div>
+            
             <div className="flex flex-col gap-1">
               <label htmlFor="" className="text-sm font-bold">
                 Email
@@ -393,19 +380,22 @@ function Register() {
           </div>
           <div className="border-b relative my-4">
             <div className=" absolute text-sm top-[-10px] bg-white px-3 right-[50%] translate-x-[50%] text-gray-500">
-            {t('register.t18')}
+             hoặc
             </div>
           </div>
           <div className="pt-4">
             <button className="border shadow-sm rounded-lg w-full py-2 flex items-center justify-center gap-3 hover:bg-primary-50">
               <img src={i_google} alt="" />
-              {t('register.t19')}
+              {t("register.t19")}
             </button>
           </div>
+        </div>
+        <div className="flex-1 pl-10 hidden lg:block">
+          <img src={i_register} className="w-full object-cover h-full rounded-lg" alt="" />
         </div>
       </div>
     </div>
   );
 }
 
-export default Register;
+export default RegisterPage;

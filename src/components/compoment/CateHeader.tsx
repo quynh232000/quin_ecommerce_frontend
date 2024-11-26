@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { BiCategory } from "react-icons/bi";
 import { FaAngleRight } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { GetCategoriesService } from "../../services/CategorySevice";
+// import { GetCategoriesService } from "../../services/CategorySevice";
 import { MCategory } from "../../interfaces/app";
 import { useTranslation } from "react-i18next";
 
@@ -22,6 +22,7 @@ function CateHeader() {
     //     setCates(res.data);
     //   }
     // });
+    setCates([])
   }, []);
 
   const showMore = (id: number) => {

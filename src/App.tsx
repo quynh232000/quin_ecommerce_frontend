@@ -24,7 +24,7 @@ const App = () => {
     document.documentElement.classList.toggle("dark", newTheme === "dark");
   };
   return (
-    <main className="dark:bg-red-800 bg-white h-[100vh]">
+    <main className="dark:bg-red-800 bg-white h-[100vh] text-base">
       <AppProvider>
         <Routes>
           {routesConfig.map(
@@ -62,7 +62,7 @@ const App = () => {
         </Routes>
       </AppProvider>
 
-      <button onClick={toggleDarkMode}>dark mode</button>
+      <button className=" hidden" onClick={toggleDarkMode}>dark mode</button>
     </main>
   );
 };

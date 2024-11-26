@@ -55,7 +55,7 @@ function Header() {
     setCurrent_lang(current_language);
   }, []);
   return (
-    <div className="h-[115px] w-full">
+    <div className="h-header w-full z-[99]">
       <div className=" fixed top-0 left-0 right-0 bg-white z-10">
         <div className="bg-primary-500 text-white">
           <div className="xl:w-content w-full px-5 xl:px-0 mx-auto flex justify-between py-2 text-[14px]">
@@ -266,9 +266,7 @@ function Header() {
                 <div className="md:flex hidden gap-3">
                   <Menu>
                     <MenuHandler>
-                      <button
-                        className="flex gap-1 items-center text-primary-900  py-1 px-3 rounded-lg"
-                      >
+                      <button className="flex gap-1 items-center text-primary-900  py-1 px-3 rounded-lg">
                         <div>
                           <FaRegUser className="text-[20px]" />
                         </div>
@@ -276,8 +274,21 @@ function Header() {
                       </button>
                     </MenuHandler>
                     <MenuList>
-                      <MenuItem>Đăng ký</MenuItem>
-                      <MenuItem>Đăng nhập</MenuItem>
+                      <MenuItem>
+                        <Link className="" to={"/user/profile"}>
+                          <div>Hồ sơ</div>
+                        </Link>
+                      </MenuItem>
+                      <MenuItem>
+                        <Link className="" to={"/register"}>
+                          <div>Đăng ký</div>
+                        </Link>
+                      </MenuItem>
+                      <MenuItem>
+                        <Link className="" to={"/login"}>
+                          <div>Đăng nhập</div>
+                        </Link>
+                      </MenuItem>
                     </MenuList>
                   </Menu>
                 </div>
