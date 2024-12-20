@@ -32,7 +32,7 @@ const GoogleLoginButton = ({ handleLoginWithGoogle }: GoogleLoginProps) => {
         return () => {
           window.removeEventListener('google-loaded', initializeGoogleSignIn);
         };
-      }, [handleLoginWithGoogle]);
+      }, []);
     
       return <div id="google-btn"></div>;
 };

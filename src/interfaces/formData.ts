@@ -1,17 +1,4 @@
-export class FormRegister{
-    first_name:string
-    last_name:string
-    email:string
-    code:string 
-    password:string
-    constructor(){
-        this.first_name=''
-        this.last_name=''
-        this.email=''
-        this.code=''
-        this.password=''
-    }
-}
+
 export class FormLogin{
     email:string;
     password:string;

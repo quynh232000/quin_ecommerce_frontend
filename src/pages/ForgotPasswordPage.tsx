@@ -83,7 +83,7 @@ function ForgotPasswordPage() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleLoginSuccess = (res: any) => {
     if (res.status) {
-      localStorage.setItem("USER_TOKEN", res.data.meta.access_token);
+      localStorage.setItem("ACCESS_TOKEN", res.data.meta.access_token);
       localStorage.setItem("IS_LOGIN", JSON.stringify(true));
       localStorage.setItem("CURRENT_USER", JSON.stringify(res.data.user));
       dispatch(setIsLogin(true));

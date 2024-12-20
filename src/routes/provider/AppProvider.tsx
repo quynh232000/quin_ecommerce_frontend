@@ -22,7 +22,7 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
   const dispatch = useDispatch();
   const isLogin = auth.isLogin;
   const user = auth.user;
-  const token = localStorage.getItem("USER_TOKEN") ?? "";
+  const token = localStorage.getItem("ACCESS_TOKEN") ?? "";
   useEffect(() => {
     if (token) {
       SMe().then((res) => {
@@ -35,7 +35,7 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
           dispatch(setIsLogin(false));
           dispatch(setUser(null));
           localStorage.removeItem("CURRENT_USER");
-          localStorage.removeItem("USER_TOKEN");
+          localStorage.removeItem("ACCESS_TOKEN");
           localStorage.setItem("IS_LOGIN", JSON.stringify(false));
         }
       });

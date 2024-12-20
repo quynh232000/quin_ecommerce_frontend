@@ -7,7 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import logo from "../../../assets/logo/logo-new.png";
 import { RootState } from "../../../redux/reducers";
 import { useDispatch, useSelector } from "react-redux";
-import { FaArrowRightLong, FaRegCircleQuestion } from "react-icons/fa6";
+import { FaRegCircleQuestion } from "react-icons/fa6";
 import i_avatar from "../../../assets/icons/avatar.png";
 import { AiOutlineMenu } from "react-icons/ai";
 
@@ -31,7 +31,7 @@ function Header() {
   const dispatch = useDispatch();
 
   const handleLogout = () => {
-    localStorage.removeItem("USER_TOKEN");
+    localStorage.removeItem("ACCESS_TOKEN");
     localStorage.removeItem("CURRENT_USER");
     localStorage.removeItem("IS_LOGIN");
     dispatch(clearCart());
@@ -179,13 +179,13 @@ function Header() {
               />
               {auth.isLogin ? (
                 <div className=" hidden gap-4 md:flex">
-                  <Link
+                  {/* <Link
                     to={"/account/@" + auth.user.username + "/courses"}
                     className="flex gap-1 items-center  hover:text-primary-500 py-1 px-3 border border-primary-500 rounded-lg text-primary-500 hover:bg-primary-50"
                   >
                     <FaArrowRightLong />
                     <span>{t("header.learning")}</span>
-                  </Link>
+                  </Link> */}
 
                   <Menu placement="bottom-end">
                     <MenuHandler>
@@ -202,7 +202,7 @@ function Header() {
                     <MenuList>
                       <MenuItem>
                         <Link
-                          to={"/account/@" + auth.user.username}
+                          to={"/user/profile"}
                           className="flex gap-2 items-center w-full"
                         >
                           <div className="w-[52px] h-[52px] border rounded-full">
@@ -214,17 +214,17 @@ function Header() {
                           </div>
                           <div className="flex flex-col justify-center">
                             <div className="font-bold text-primary-500">
-                              {auth.user.first_name + " " + auth.user.last_name}
+                              {auth.user.full_name}
                             </div>
                             <div className="text-sm mt-1">
-                              @{auth.user.username}
+                              {auth.user.email}
                             </div>
                           </div>
                         </Link>
                       </MenuItem>
                       <MenuItem className="border-t border-b mt-2 p-0">
                         <Link
-                          to={"/account/@" + auth.user.username}
+                          to={"/user/profile"}
                           className="w-full  block p-2"
                         >
                           {t("header.profile")}
@@ -275,18 +275,13 @@ function Header() {
                     </MenuHandler>
                     <MenuList>
                       <MenuItem>
-                        <Link className="" to={"/user/profile"}>
-                          <div>Hồ sơ</div>
+                        <Link className="" to={"/login"}>
+                          <div>Đăng nhập</div>
                         </Link>
                       </MenuItem>
                       <MenuItem>
                         <Link className="" to={"/register"}>
                           <div>Đăng ký</div>
-                        </Link>
-                      </MenuItem>
-                      <MenuItem>
-                        <Link className="" to={"/login"}>
-                          <div>Đăng nhập</div>
                         </Link>
                       </MenuItem>
                     </MenuList>

@@ -23,6 +23,8 @@ import VoucherPage from "../pages/profile/VoucherPage";
 import FavouritePage from "../pages/profile/FavouritePage";
 import OrderPage from "../pages/profile/OrderPage";
 import OrderDetailPage from "../pages/profile/OrderDetailPage";
+import CoinPage from "../pages/profile/CoinPage";
+import BlogPage from "../pages/BlogPage";
 
 interface RouteType {
   path: string;
@@ -46,11 +48,13 @@ export const routesConfig: RouteType[] = [
       { path: "/checkout", element: <CheckoutPage /> },
       { path: "/payment", element: <PaymentPage /> },
       { path: "/checkout-success", element: <CheckoutSuccessPage /> },
+      { path: "/blog/:slug", element: <BlogPage /> },
     ],
   },
   {
     path:'user',
     element:<LayoutProfile/>,
+    middleware: "auth",
     children:[
       { path: "profile", element: <ProfilePage />  },
       { path: "password", element: <PasswordPage />  },
@@ -60,6 +64,7 @@ export const routesConfig: RouteType[] = [
       { path: "favourite", element: <FavouritePage />  },
       { path: "order", element: <OrderPage />  },
       { path: "order-detail", element: <OrderDetailPage />  },
+      { path: "coins", element: <CoinPage />  },
     ]
   },
   {

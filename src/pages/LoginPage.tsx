@@ -7,13 +7,13 @@ import { FormLogin } from "../interfaces/formData";
 import { IoEyeOutline } from "react-icons/io5";
 import { SLogin } from "../services/AppService";
 import { GoogleCredentialResponse } from "../interfaces/app";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../redux/reducers";
+import { useDispatch } from "react-redux";
+// import { RootState } from "../redux/reducers";
 // import { asyncCart } from "../redux/reducers/appReducer";
 import GoogleLoginButton from "../components/compoment/GoogleLoginButton";
 import { sLoginWithGoogle } from "../services/AppService";
 import { useTranslation } from "react-i18next";
-import { setIsLogin } from "../redux/reducers/authReducer";
+import { setIsLogin, setUser } from "../redux/reducers/authReducer";
 import { setCurrentUser } from "../redux/reducers/appReducer";
 import i_logo from "../assets/logo/logo-new.png";
 // import ToastMessage from "../components/compoment/ToastMessage";
@@ -22,7 +22,7 @@ const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 function LoginPage() {
   const { t } = useTranslation();
   const location = useLocation();
-  const { cart } = useSelector((state: RootState) => state.appReducer);
+  // const { cart } = useSelector((state: RootState) => state.appReducer);
   const dispatch = useDispatch();
   const searchParams = new URLSearchParams(location.search);
   const redirect = searchParams.get("redirect") || "";
@@ -80,7 +80,9 @@ function LoginPage() {
   const handleSubmit = () => {
     setResultError("");
     setResultSuccess("");
+    setIsSubmit(false);
     SLogin(formData).then((res) => {
+      setIsSubmit(true);
       handleLoginSuccess(res);
     });
   };
@@ -88,27 +90,29 @@ function LoginPage() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleLoginSuccess = (res: any) => {
     if (res.status) {
-      localStorage.setItem("USER_TOKEN", res.data.meta.access_token);
+      localStorage.setItem("ACCESS_TOKEN", res.data.meta.access_token);
+      localStorage.setItem("REFRESH_TOKEN", res.data.meta.refresh_token);
       localStorage.setItem("IS_LOGIN", JSON.stringify(true));
       localStorage.setItem("CURRENT_USER", JSON.stringify(res.data.user));
       dispatch(setIsLogin(true));
       dispatch(setCurrentUser(res.data.user));
-
+      dispatch(setUser(res.data.user));
+      navigate(redirect ? redirect : "/");
       // asyn cart
-      if (cart) {
-        const listIds: number[] = [];
-        cart.forEach((i) => {
-          listIds.push(i.id);
-        });
-        // SAsynCart(listIds, res.data.meta.access_token).then((res) => {
-        //   dispatch(asyncCart(res.data ?? []));
-        //   setResultSuccess(t('login.3'));
-        //   // window.location.href = redirect ? redirect : "/";
-        // });
-        navigate("/");
-      } else {
-        // window.location.href = redirect ? redirect : "/";
-      }
+      // if (cart) {
+      //   const listIds: number[] = [];
+      //   cart.forEach((i) => {
+      //     listIds.push(i.id);
+      //   });
+      //   SAsynCart(listIds, res.data.meta.access_token).then((res) => {
+      //     dispatch(asyncCart(res.data ?? []));
+      //     setResultSuccess(t('login.3'));
+      //     // window.location.href = redirect ? redirect : "/";
+      //   });
+      //   navigate("/");
+      // } else {
+      //   // window.location.href = redirect ? redirect : "/";
+      // }
     } else {
       setResultError(res.message);
     }
@@ -144,7 +148,9 @@ function LoginPage() {
                 <img src={i_logo} className="w-[74px]" alt="" />
               </Link>
             </div>
-            <div className="text-sm text-gray-500 mt-1">Đăng nhập tài khoản mua sắm nhiều ưu đãi</div>
+            <div className="text-sm text-gray-500 mt-1">
+              Đăng nhập tài khoản mua sắm nhiều ưu đãi
+            </div>
           </div>
           <div className="py-4 flex flex-col gap-3 mt-2">
             <div className="flex flex-col gap-1">

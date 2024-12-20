@@ -13,9 +13,34 @@ import i_banner_mall from "../assets/banner/banner_mall.png";
 import ProductFind from "../components/items/ProductFind";
 import NewsItem from "../components/items/NewsItem";
 import LastPriacy from "../components/compoment/LastPriacy";
-
+import { useEffect, useState } from "react";
+import { ICategory, IPost, IVoucher } from "../interfaces/common";
+import {
+  SGetBlog,
+  SGetCategoryHome,
+  SGetVoucherHome,
+} from "../services/AppService";
 
 const HomePage = () => {
+  const [categories, setcategories] = useState<ICategory[]>([]);
+  const [vouchers, setVouchers] = useState<IVoucher[]>([]);
+  const [posts, setPosts] = useState<IPost[]>([]);
+  useEffect(() => {
+    SGetCategoryHome().then((res) => {
+      if (res.status) {
+        setcategories(res.data);
+      }
+    });
+    SGetVoucherHome("?limit=3").then((res) => {
+      if (res.status) {
+        setVouchers(res.data);
+      }
+    });
+    SGetBlog("?limit=4").then((res) => {
+      if (res.status) setPosts(res.data);
+    });
+  }, []);
+
   return (
     <div className="flex flex-col gap-[40px] py-[40px]">
       {/* banner cate */}
@@ -58,18 +83,9 @@ const HomePage = () => {
         </div>
         {/* cate */}
         <div className=" grid grid-cols-12 gap-4">
-          <CateItem />
-          <CateItem />
-          <CateItem />
-          <CateItem />
-          <CateItem />
-          <CateItem />
-          <CateItem />
-          <CateItem />
-          <CateItem />
-          <CateItem />
-          <CateItem />
-          <CateItem />
+          {categories.map((item) => {
+            return <CateItem key={item.id} category={item} />;
+          })}
         </div>
       </div>
       <div className=" relative ">
@@ -134,20 +150,13 @@ const HomePage = () => {
       </div>
       <div className="w-content m-auto flex flex-col gap-[40px]">
         {/* voucher */}
-        <div className="">
-          <Carousel className="rounded-xl">
-            <div className=" grid grid-cols-3 gap-4">
-              <VoucherItem />
-              <VoucherItem />
-              <VoucherItem />
-            </div>
-            <div className=" grid grid-cols-3 gap-4">
-              <VoucherItem />
-              <VoucherItem />
-              <VoucherItem />
-            </div>
-          </Carousel>
-        </div>
+        {vouchers && vouchers.length > 0 && (
+          <div className=" grid grid-cols-3 gap-4">
+            {vouchers.map((item) => {
+              return <VoucherItem voucher={item} key={item.id} />;
+            })}
+          </div>
+        )}
         {/* shop mall */}
         <div>
           <div className="flex justify-between items-center border-b-2 border-primary-500 pb-3 mb-5">
@@ -317,15 +326,17 @@ const HomePage = () => {
             </div>
           </div>
           <div className="grid grid-cols-4 gap-5">
-            <NewsItem />
-            <NewsItem />
-            <NewsItem />
-            <NewsItem />
+            {posts.length >0 && posts.map(item=>{
+              return (
+                <NewsItem key={item.id} post={item} />
+              )
+            })}
+           
           </div>
         </div>
 
         {/* last */}
-        <LastPriacy/>
+        <LastPriacy />
       </div>
     </div>
   );
