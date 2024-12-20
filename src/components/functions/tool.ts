@@ -60,3 +60,15 @@ export const formatDuration = (seconds: number, is_text = true) => {
     }:${remainingSeconds < 10 ? "0" + remainingSeconds : remainingSeconds} `;
   }
 };
+export const FormatTime = (timestamp: string | Date) => {
+  const date = new Date(timestamp);
+  let hours:number = date.getUTCHours(); 
+  let minutes = date.getUTCMinutes();
+  let seconds = date.getUTCSeconds();
+  
+  hours = +hours.toString().padStart(2, '0');
+  minutes = +minutes.toString().padStart(2, '0');
+  seconds = +seconds.toString().padStart(2, '0');
+  
+  return `${hours}:${minutes}:${seconds}`;
+};

@@ -5,10 +5,12 @@ import {
   MdOutlineDiscount,
   MdOutlineLocationOn,
 } from "react-icons/md";
-import { FaRegUser } from "react-icons/fa";
+import { FaCoins, FaRegUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { IoBagHandleOutline, IoHelpCircleOutline } from "react-icons/io5";
 import { useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/reducers";
 const dataNavs = [
   { id: 1, title: "Hồ sơ", url: "/user/profile", icon: <FaRegUser /> },
   { id: 2, title: "Đổi mật khẩu", url: "/user/password", icon: <CiLock /> },
@@ -17,6 +19,12 @@ const dataNavs = [
     title: "Địa chỉ",
     url: "/user/address",
     icon: <MdOutlineLocationOn />,
+  },
+  {
+    id: 7,
+    title: "Đơn hàng",
+    url: "/user/order",
+    icon: <IoBagHandleOutline />,
   },
   { id: 4, title: "Thông báo", url: "/user/notifications", icon: <CiBellOn /> },
   {
@@ -32,43 +40,44 @@ const dataNavs = [
     icon: <MdOutlineDiscount />,
   },
   {
-    id: 7,
-    title: "Đơn hàng",
-    url: "/user/order",
-    icon: <IoBagHandleOutline />,
+    id: 10,
+    title: "Quin Xu",
+    url: "/user/coins",
+    icon: <FaCoins />,
   },
   { id: 8, title: "Hỗ trợ", url: "/user/help", icon: <IoHelpCircleOutline /> },
   { id: 9, title: "Đăng xuất", url: "/user/logout", icon: <CiLogout /> },
 ];
 function ProfileSidebar() {
     const [navActive ,setNavActive] = useState(1)
+    const {user} = useSelector((state:RootState)=> state.authReducer)
   return (
     <div className="">
       <div className="p-5 flex gap-2 ">
         <div className="w-[52px] h-[52px]">
           <img
             className="w-full h-full rounded-full object-cover"
-            src="https://img.freepik.com/free-vector/cute-kid-girl-holding-bubble-milk-tea-hand-drawn-cartoon-character-illustration_56104-1857.jpg"
+            src={user.avatar_url??"https://img.freepik.com/free-vector/cute-kid-girl-holding-bubble-milk-tea-hand-drawn-cartoon-character-illustration_56104-1857.jpg"}
             alt=""
           />
         </div>
         <div className="flex flex-col justify-between">
-          <div className="font-bold">Quynh Nguyen</div>
-          <div className="flex items-center gap-2 text-primary-500 hover:text-primary-600">
+          <div className="font-bold">{user.full_name}</div>
+          <Link to={'/user/profile'} className="flex items-center gap-2 text-primary-500 hover:text-primary-600">
             <CiEdit className="text-xl" />
             <div>Chỉnh sửa</div>
-          </div>
+          </Link>
         </div>
       </div>
       <div className="flex bg-primary-50 justify-between p-3">
         <div className="flex flex-col justify-between">
           <div className="font-bold text-gray-900">Xu của bạn</div>
           <div>
-            <div className="font-bold text-xl text-primary-500">560</div>
+            <div className="font-bold text-xl text-primary-500">{user.total_coin ??0}</div>
           </div>
-          <div className="flex items-center gap-2 text-sm text-primary-500">
+          <Link to={"/user/coins"} className="flex items-center gap-2 text-sm text-primary-500">
             Xem chi tiết <MdChevronRight />
-          </div>
+          </Link>
         </div>
         <div>
           <img className="w-[112px] object-cover" src={i_profile_xu} alt="" />

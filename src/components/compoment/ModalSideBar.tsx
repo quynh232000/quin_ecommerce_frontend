@@ -22,7 +22,7 @@ function ModalSideBar({ isOpenSidebar, setIsOpenSidebar }: props) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleLogout = () => {
-    localStorage.removeItem("USER_TOKEN");
+    localStorage.removeItem("ACCESS_TOKEN");
     localStorage.removeItem("CURRENT_USER");
     localStorage.removeItem("IS_LOGIN");
     dispatch(clearCart());

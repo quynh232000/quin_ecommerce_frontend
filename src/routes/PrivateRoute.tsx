@@ -14,7 +14,7 @@ const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
           setIsAuthenticated(true);  
         } else {
           localStorage.removeItem("CURRENT_USER");
-          localStorage.removeItem("USER_TOKEN");
+          localStorage.removeItem("ACCESS_TOKEN");
           localStorage.setItem("IS_LOGIN", JSON.stringify(false));
           setIsAuthenticated(false); 
         }

@@ -1,17 +1,20 @@
 import { Link } from "react-router-dom";
-
-function NewsItem() {
+import { IPost } from "../../interfaces/common";
+type props={
+  post:IPost
+}
+function NewsItem({post}:props) {
   return (
     <div className="border rounded-lg p-2">
       <div className="h-[188px]">
         <img
           className="rounded-t-lg w-full h-full object-cover"
-          src="https://digitalvn.vn/wp-content/uploads/2021/08/cong-nghe-4_0.jpg"
+          src={post.thumbnail}
           alt=""
         />
       </div>
-      <Link to={"#"} >
-        <h2 className="mt-3 hover:text-primary-500">Laptop Hp full màn hình chơi game siêu mượt dành cho sinh viên</h2>
+      <Link to={"/blog/"+post.slug} >
+        <h2 className="mt-3 hover:text-primary-500">{post.title}</h2>
       </Link>
     </div>
   );

@@ -1,22 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
+import { IToastMessage } from "../../interfaces/common";
 
-interface ToastProps {
-  title?: string;
-  message?: string;
-  type?: "success" | "info" | "warning" | "error";
-  // type?: string;
-  duration?: number;
-}
 
 function ToastMessage({
   title = "Thành công!",
   message = "",
   type = "success",
-  duration = 3000,
-}: ToastProps) {
+
+}: IToastMessage) {
   const [isClose, setIsClose] = useState(false);
   const toastRef = useRef<HTMLDivElement>(null);
-
+  const duration=5000
   useEffect(() => {
     // Auto-remove toast
     const autoRemoveId = setTimeout(() => {

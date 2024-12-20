@@ -1,21 +1,22 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import i_register from "../assets/images/register.png";
-import i_google from "../assets/icons/google.png";
 import i_logo from "../assets/logo/logo-new.png";
 import { ChangeEvent, useState } from "react";
-import { FormRegister } from "../interfaces/formData";
 import {
-  SAsynCart,
   SCheckEmail,
+  sLoginWithGoogle,
   SRegister,
   SVerifyEmail,
 } from "../services/AppService";
 import { FaRegEyeSlash } from "react-icons/fa";
 import { IoEyeOutline } from "react-icons/io5";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../redux/reducers";
-import { asyncCart } from "../redux/reducers/appReducer";
+import { useDispatch } from "react-redux";
+import { setCurrentUser } from "../redux/reducers/appReducer";
 import { useTranslation } from "react-i18next";
+import { MFormRegister } from "../models/AppModel";
+import { setIsLogin, setUser } from "../redux/reducers/authReducer";
+import { GoogleCredentialResponse } from "../interfaces/app";
+import GoogleLoginButton from "../components/compoment/GoogleLoginButton";
 
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const level2Regex = /^(?=.*[a-zA-Z])(?=.*\d).{8,}$/; // Letters and numbers
@@ -35,7 +36,7 @@ function RegisterPage() {
   const { t } = useTranslation();
   const location = useLocation();
 
-  const { cart } = useSelector((state: RootState) => state.appReducer);
+  // const { cart } = useSelector((state: RootState) => state.appReducer);
   const dispatch = useDispatch();
 
   const searchParams = new URLSearchParams(location.search);
@@ -46,9 +47,9 @@ function RegisterPage() {
   const [canEntercode, setCanEnterCode] = useState(false);
   const [showPass, setShowPass] = useState(false);
 
-  const [formData, setFormData] = useState<FormRegister>(new FormRegister());
-  const [errorInput, setErrorInput] = useState<FormRegister>(
-    new FormRegister()
+  const [formData, setFormData] = useState<MFormRegister>(new MFormRegister());
+  const [errorInput, setErrorInput] = useState<MFormRegister>(
+    new MFormRegister()
   );
   const [checkPass, setCheckPass] = useState<{
     level: number;
@@ -93,11 +94,7 @@ function RegisterPage() {
               ...errorInput,
               email: "",
             });
-            if (
-              formData.first_name != "" &&
-              formData.last_name != "" &&
-              checkPass.level >= 3
-            ) {
+            if (formData.full_name != "" && checkPass.level >= 3) {
               setIsSendcode(true);
             }
           } else {
@@ -136,12 +133,7 @@ function RegisterPage() {
         });
       }
     }
-    if (
-      formData.first_name != "" &&
-      formData.last_name != "" &&
-      // checkPass.level >= 3 &&
-      isValid
-    ) {
+    if (formData.full_name != "" && isValid) {
       setIsSendcode(true);
     }
 
@@ -163,36 +155,43 @@ function RegisterPage() {
       setIsSendcode(true);
     });
   };
-
+  const navigate = useNavigate();
   const handleSubmit = () => {
     setResultSuccess("");
     setResultError("");
     setIsSubmit(false);
     SRegister(formData).then((res) => {
       if (res.status) {
-        localStorage.setItem("USER_TOKEN", res.meta.access_token);
-        localStorage.setItem("IS_LOGIN", JSON.stringify(true));
-        window.location.href = redirect ? redirect : "/";
-        localStorage.setItem("CURRENT_USER", JSON.stringify(res.data));
-        // asyn cart
-        if (cart) {
-          const listIds: number[] = [];
-          cart.forEach((i) => {
-            listIds.push(i.id);
-          });
-          SAsynCart(listIds, res.meta.access_token).then((res) => {
-            dispatch(asyncCart(res.data ?? []));
-            setResultSuccess(t("register.t8"));
-            window.location.href = redirect ? redirect : "/";
-          });
-        } else {
-          window.location.href = redirect ? redirect : "/";
-        }
+        handleLoginSuccess(res)
       } else {
         setIsSubmit(true);
         setResultError(res.message);
       }
     });
+  };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleLoginSuccess = (res: any) => {
+    if (res.status) {
+      localStorage.setItem("ACCESS_TOKEN", res.data.meta.access_token);
+      localStorage.setItem("REFRESH_TOKEN", res.data.meta.refresh_token);
+      localStorage.setItem("IS_LOGIN", JSON.stringify(true));
+      localStorage.setItem("CURRENT_USER", JSON.stringify(res.data.user));
+      dispatch(setIsLogin(true));
+      dispatch(setCurrentUser(res.data.user));
+      dispatch(setUser(res.data.user));
+      navigate(redirect ? redirect : "/");
+    
+    } else {
+      setResultError(res.message);
+    }
+  };
+  const handleLoginWithGoogle = (response: GoogleCredentialResponse) => {
+    if (response.credential) {
+      const token = response.credential;
+      sLoginWithGoogle(token).then((res) => {
+        handleLoginSuccess(res);
+      });
+    }
   };
 
   return (
@@ -212,23 +211,23 @@ function RegisterPage() {
           </div>
           <div className="py-4 flex flex-col gap-3 mt-2">
             <div className="flex flex-col gap-1">
-            <label htmlFor="" className="text-sm font-bold">
-               Họ tên
+              <label htmlFor="" className="text-sm font-bold">
+                Họ tên
               </label>
               <input
                 className={
                   "border p-2 px-4 rounded-lg shadow-sm focus:border-primary-500" +
-                  (errorInput.first_name && " border-deep-orange-500")
+                  (errorInput.full_name && " border-deep-orange-500")
                 }
                 type="text"
-                name="fullname"
-                value={formData.first_name}
+                name="full_name"
+                value={formData.full_name}
                 onChange={handleChange}
                 placeholder="Họ tên"
               />
-              <small className="text-red-500">{errorInput.first_name}</small>
+              <small className="text-red-500">{errorInput.full_name}</small>
             </div>
-            
+
             <div className="flex flex-col gap-1">
               <label htmlFor="" className="text-sm font-bold">
                 Email
@@ -380,18 +379,19 @@ function RegisterPage() {
           </div>
           <div className="border-b relative my-4">
             <div className=" absolute text-sm top-[-10px] bg-white px-3 right-[50%] translate-x-[50%] text-gray-500">
-             hoặc
+              hoặc
             </div>
           </div>
-          <div className="pt-4">
-            <button className="border shadow-sm rounded-lg w-full py-2 flex items-center justify-center gap-3 hover:bg-primary-50">
-              <img src={i_google} alt="" />
-              {t("register.t19")}
-            </button>
+          <div className="pt-4 flex justify-center">
+            <GoogleLoginButton handleLoginWithGoogle={handleLoginWithGoogle} />
           </div>
         </div>
         <div className="flex-1 pl-10 hidden lg:block">
-          <img src={i_register} className="w-full object-cover h-full rounded-lg" alt="" />
+          <img
+            src={i_register}
+            className="w-full object-cover h-full rounded-lg"
+            alt=""
+          />
         </div>
       </div>
     </div>
